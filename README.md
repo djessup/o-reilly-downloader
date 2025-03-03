@@ -23,9 +23,11 @@ A powerful bash script to download books from the O'Reilly Learning Platform in 
 
 1. Clone or download this repository
 2. Make the script executable:
+
    ```bash
    chmod +x oreilly-downloader.sh
    ```
+
 3. Set up authentication (see below)
 
 ## Authentication Setup
@@ -33,17 +35,20 @@ A powerful bash script to download books from the O'Reilly Learning Platform in 
 ### Method 1: Username/Password Authentication
 
 1. Create `data` directory:
+
    ```bash
    mkdir -p data
    ```
 
 2. Create a configuration file with your O'Reilly credentials:
+
    ```bash
    cp user.conf.sample data/user.conf
    ```
 
 3. Edit `data/user.conf` with your actual username and password:
-   ```
+
+   ```text
    your_oreilly_username@example.com
    your_password_here
    ```
@@ -51,7 +56,7 @@ A powerful bash script to download books from the O'Reilly Learning Platform in 
 ### Method 2: SSO Authentication
 
 1. Log in to O'Reilly using your organization's SSO
-2. Navigate to https://learning.oreilly.com/profile/ (or any authenticated page, really)
+2. Navigate to <https://learning.oreilly.com/profile/> (or any authenticated page, really)
 3. Extract cookies from your browser:
    - Open Developer Tools (F12)
    - Run this code snippet from Console to copy your cookies as JSON:
@@ -119,7 +124,6 @@ Example (`books.txt`):
 ./oreilly-downloader.sh -b 9780321635754 -t "Art_of_Computer_Programming" -f both
 ```
 
-
 ### SSO Login
 
 ```bash
@@ -129,7 +133,6 @@ Example (`books.txt`):
 # Download multiple books with SSO
 ./oreilly-downloader.sh -l books.txt -f pdf -m sso -c cookies.json
 ```
-
 
 ## Finding Book IDs
 
@@ -141,7 +144,7 @@ Example (`books.txt`):
 
 - For PDF conversion, the script uses:
   - Local Calibre on macOS if available (`/Applications/calibre.app/Contents/MacOS/ebook-convert`)
-  - Docker-based conversion using `rappdw/ebook-convert` as fallback (_untested_)
+  - Docker-based conversion using `rappdw/ebook-convert` as fallback (*untested*)
 - Temporary files are stored in the `download/tmp` directory
 - Final downloaded files are saved to:
   - PDFs: `download/pdf/`
@@ -152,4 +155,3 @@ Example (`books.txt`):
 - [kirinnee/oreilly-downloader](https://github.com/kirinnee/oreilly-downloader) for the Docker image used for downloading
 - [Calibre Project](https://calibre-ebook.com) for the ebook conversion tools
 - [rappdw/ebook-convert](https://github.com/rappdw/ebook-convert) for the Docker image used for conversion
-
