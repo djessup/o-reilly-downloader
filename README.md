@@ -1,150 +1,155 @@
-<p align="center">
-  <a href="" rel="noopener">
- <img width=200px height=200px src="https://www.codegrepper.com/profile_images/577485_lnuxr2sSE6gZJmlrr5h9oITqE8lUbMPCpaFSel94VRGDIK8N5Zbthqn.png" alt="Project logo"></a>
-</p>
+# O'Reilly Book Downloader
 
-<h1 align="center">O-Reilly-Downloader 2022</h1>
-<br>
-<br>
-<div align="center">
+A powerful bash script to download books from the O'Reilly Learning Platform in PDF and/or EPUB format.
 
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
-<br>
+## Features
 
-</div>
+- Download books in PDF and/or EPUB format
+- Support for both username/password and SSO login methods
+- Batch downloading capability for multiple books
+- EPUB to PDF conversion using:
+  - Local Calibre installation on macOS (if available)
+  - Docker-based conversion as fallback
+- Progress indicators and detailed output
 
----
+## Prerequisites
 
-<p align="center"> simple cli to download e-books from o'reilly learning plattform to your filesystem as pdf
-    <br> 
-</p>
-<br> 
-<br> 
-<br> 
+- **Docker**: Required for downloading books from O'Reilly
+- **Bash shell**: To run the script
+- **O'Reilly subscription**: Either personal account or organizational SSO access
+- **Calibre** *(optional)*: For local PDF conversion on macOS
 
-## 📝 Table of Contents
+## Installation
 
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Perequisites](#perequisites)
-- [Initial Setup](#initial_setup)
-- [What Username/Password needed?](#username_password)
-- [Installing](install)
-- [Special Thanks](special_thanks)
-- [Authors](#authors)
+1. Clone or download this repository
+2. Make the script executable:
+   ```bash
+   chmod +x oreilly-downloader.sh
+   ```
+3. Set up authentication (see below)
 
-<br><br>
+## Authentication Setup
 
-## 🧐 About <a name = "about"></a>
+### Method 1: Username/Password Authentication
 
-A fast and simple CLI shell script to download e-book as pdf from https://learning.oreilly.com/
-<br><br>
-## 🏁 Getting Started <a name = "getting_started"></a>
+1. Create `data` directory:
+   ```bash
+   mkdir -p data
+   ```
 
-Download the script and save it in the directory where you want to save the downloaded e-book.
+2. Create a configuration file with your O'Reilly credentials:
+   ```bash
+   cp user.conf.sample data/user.conf
+   ```
 
-Start your terminal shell and execute the following command:
+3. Edit `data/user.conf` with your actual username and password:
+   ```
+   your_oreilly_username@example.com
+   your_password_here
+   ```
+
+### Method 2: SSO Authentication
+
+1. Log in to O'Reilly using your organization's SSO
+2. Navigate to https://learning.oreilly.com/profile/ (or any authenticated page, really)
+3. Extract cookies from your browser:
+   - Open Developer Tools (F12)
+   - Run this code snippet from Console to copy your cookies as JSON:
+
+   ```javascript
+    copy(JSON.stringify(document.cookie.split(';').map(c => c.split('=')).map(i => [i[0].trim(), i[1].trim()]).reduce((r, i) => {r[i[0]] = i[1]; return r;}, {})))
+    ```
+
+4. Save the cookies JSON to a file (e.g., `cookies.json`)
+
+## Usage
+
+### Download a single book
+
 ```bash
-bash oreilly-downloader.sh -b <book-number> -t <book-title>
-```
-**book-number** (-b): You can find the book number in the url as shown in the picture below.
-![alt text](./screenshot.png)
-
-**book-title** (-t): You can name the pdf as you want. The book title must be spelled without spaces. Like *designing_react_hooks_the_right_way*
-
-You dont have to specify or provide a file extension
-<br><br>
-## Prerequisites <a name = "perequisites"></a>
-
-You have to options to provide credentials for o reilly learning plattform to the script.
-
-- Docker
-- O'Reilly Subscription
-- calibre 
-*For Mac:* 
-```shell
-brew install calibre
-```
-for further instructions or other OS
-[Calibre Homepage](https://calibre-ebook.com/)
-<br><br>
-## Initial Setup <a name = "initial_setup"></a>
-
-Make sure to register and sign up for a account at [O'Reilly Learning Website](https://learning.oreilly.com/)
-
-You can create a test account and fully use this cli.
-
-**Note:**
-*Please make sure to not violate any restrictions or rules from O'Reilly Learning Website*
-<br><br>
-## Username/password login <a name = "username_password"></a>
-
-First, find a book in O'Reilly Learning. Here I picked the famous `Art of Computer Programming` by Knuth,
-you can find it at [https://learning.oreilly.com/library/view/art-of-computer/9780321635754/](https://learning.oreilly.com/library/view/art-of-computer/9780321635754/).
-
-Copy the ID of the book (in this case `9780321635754`)
-
-And then run following command in the directory where you download the script
-
-```sh
-bash oreilly-downloader.sh -b `9780321635754` -t art-of-computer -f pdf || epub || both 
-```
-*only one argument is required to set data type*
-<br>
-
-| syntax  | argument  | explanation                                                         | example                       
-| ----------------|------------- | ------------------------------------------------------------------- | ----------------------------- |
-| `book id`   | `-b`| the ID of the book                                                  | `9780321635754`               |
-| `title`    | `-t` | the title of the book - you can use every title you want. Please make sure to not use spaces | `art-of-computer`   |
-| `print-as`    | `-f` | what format you want the book: epub -> pdf -> both | `art-of-computer`   |
-<br><br>
-## Installing <a name = "installing"></a>
-
-A step by step series of examples that tell you how to get the script ready.
-
-Be sure you have Docker installed and running
-
-Be sure you have calibre installed and the cli
-```sh
-# test calibre cli with
-ebook-convert --version
-# shell output
-ebook-convert (calibre 5.39.1)
-#Created by: Kovid Goyal <kovid@kovidgoyal.net>
+./oreilly-downloader.sh -b <book_id> -t <output_title> -f <format> [-m <login_method>] [-c <cookie_file>]
 ```
 
-Make sure you set-up your account at o'reilly. Then open `user.conf.sample` file with text editor (vim, nano, code) and insert your username and password or:
+**Options:**
 
-```sh
-echo "your-username" >> user.conf.sample
-echo "your-password" >> user.conf.sample
+- `-b <book_id>`: Book ID or URL (required for single book download)
+- `-t <output_title>`: Output filename without extension (required for single book download)
+- `-f <format>`: Format to download: `pdf`, `epub`, or `both` (required)
+- `-m <login_method>`: Authentication method: `user` (default) or `sso`
+- `-c <cookie_file>`: JSON file with cookies (required for SSO login)
+- `-h`: Display help message
+
+### Download multiple books
+
+```bash
+./oreilly-downloader.sh -l <batch_file> -f <format> [-m <login_method>] [-c <cookie_file>]
 ```
-Then move the file to `data` directory. Please vaidate you have a directory called data or create a new one
 
-```sh
-mkdir -p data
-mv user.conf.sample data/user.conf
+**Options:**
+
+- `-l <batch_file>`: Path to file containing list of books to download
+- Other options same as Basic Usage
+
+#### Batch File Format
+
+Create a text file with one book per line in the format:
+
+```text
+<book_id>,<output_title>
+```
+
+Example (`books.txt`):
+
+```text
+9780321635754,Art of Computer Programming
+9781492092506,Data Pipelines Pocket Reference
+# Lines starting with # are comments
+9781492087144,Building ML Pipelines
+```
+
+## Examples
+
+### Username/Password Login
+
+```bash
+# Download a book in PDF format
+./oreilly-downloader.sh -b 9780321635754 -t "Art_of_Computer_Programming" -f pdf
+
+# Download a book in both PDF and EPUB formats
+./oreilly-downloader.sh -b 9780321635754 -t "Art_of_Computer_Programming" -f both
 ```
 
 
-### Downloading every book by executing following command: ###
+### SSO Login
 
-```sh
-bash oreilly-downloader.sh -b `9780321635754` -t art-of-computer -f pdf || epub || both
+```bash
+# Download a book in PDF format with SSO
+./oreilly-downloader.sh -b 9780321635754 -t "Art_of_Computer_Programming" -f pdf -m sso -c cookies.json
+
+# Download multiple books with SSO
+./oreilly-downloader.sh -l books.txt -f pdf -m sso -c cookies.json
 ```
-<br>
-<br>
-<br>
 
-## Acknowledgment <a name = "special_thanks"></a>
-## 🎉 Specials Thanks to these people
 
-- [Kirin nee](https://github.com/kirinnee) [for the Dockerfile which is used](https://github.com/kirinnee/oreilly-downloader)
-- [Calibre Project](https://calibre-ebook.com/get-involved)
+## Finding Book IDs
 
-<br>
+1. Browse to the book on O'Reilly Learning Platform
+2. The book ID is in the URL: `https://learning.oreilly.com/library/view/book-title/<BOOK_ID>/`
+3. For example: `https://learning.oreilly.com/library/view/art-of-computer/9780321635754/` → Book ID is `9780321635754`
 
-## ✍️ Authors <a name = "authors"></a>
+## Notes
 
-- [@benriemer](https://github.com/benriemer)
+- For PDF conversion, the script uses:
+  - Local Calibre on macOS if available (`/Applications/calibre.app/Contents/MacOS/ebook-convert`)
+  - Docker-based conversion using `rappdw/ebook-convert` as fallback (_untested_)
+- Temporary files are stored in the `download/tmp` directory
+- Final downloaded files are saved to:
+  - PDFs: `download/pdf/`
+  - EPUBs: `download/epub/`
+
+## Acknowledgements
+
+- [kirinnee/oreilly-downloader](https://github.com/kirinnee/oreilly-downloader) for the Docker image used for downloading
+- [Calibre Project](https://calibre-ebook.com) for the ebook conversion tools
+- [rappdw/ebook-convert](https://github.com/rappdw/ebook-convert) for the Docker image used for conversion
+

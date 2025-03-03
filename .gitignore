@@ -2,3 +2,5 @@
 # ignore secret file
 data/user.conf
 download/
+cookies.json
+books.txt

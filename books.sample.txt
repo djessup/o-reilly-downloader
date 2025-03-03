@@ -1,0 +1,10 @@
+# List of O'Reilly books to download
+# Format: book_id_or_title,output_filename
+# Lines starting with # are comments and will be ignored
+# Empty lines will also be ignored
+
+9781788298025,Mastering Kubernetes
+9781492092506,Data Pipelines Pocket Reference
+9781492087144,Building ML Pipelines
+# Book ID without a title will use the ID as the title
+9780596101534
